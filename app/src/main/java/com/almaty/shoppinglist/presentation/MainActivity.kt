@@ -3,10 +3,12 @@ package com.almaty.shoppinglist.presentation
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.almaty.shoppinglist.R
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: MainViewModel
@@ -19,6 +21,11 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.shopList.observe(this){
             shopListAdapter.submitList(it)
+        }
+        val buttonAddItem = findViewById<FloatingActionButton>(R.id.button_add_shop_item)
+        buttonAddItem.setOnClickListener {
+            val intent = ShopItemActivity.newIntentAddItem(context = this)
+            startActivity(intent)
         }
     }
 
@@ -74,6 +81,10 @@ class MainActivity : AppCompatActivity() {
     private fun setupOnClick() {
         shopListAdapter.onShopItemClickListener = {
             Log.d("MainActivity", "click item: ${it.toString()}")
+            val intent = ShopItemActivity.newIntentEditItem(context = this, shopItemId = it.id)
+            startActivity(intent)
         }
+
+
     }
 }
