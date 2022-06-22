@@ -1,8 +1,8 @@
 package com.almaty.shoppinglist.presentation
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProvider
@@ -10,9 +10,8 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.almaty.shoppinglist.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import java.lang.RuntimeException
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener{
 
     private lateinit var viewModel: MainViewModel
     private lateinit var shopListAdapter: ShopListAdapter
@@ -41,6 +40,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
     private fun isOnePaneMode():Boolean{
         return shopItemContainer == null
     }
@@ -52,7 +52,10 @@ class MainActivity : AppCompatActivity() {
             .addToBackStack(null)
             .commit()
     }
-
+    override fun onEditingFinished() {
+        Toast.makeText(this, "Success", Toast.LENGTH_LONG).show()
+        supportFragmentManager.popBackStack()
+    }
     private fun setupRecyclerView(){
         val rvShopList = findViewById<RecyclerView>(R.id.rv_shop_list)
         with(rvShopList){
@@ -113,4 +116,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+
 }

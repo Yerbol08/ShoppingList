@@ -2,27 +2,17 @@ package com.almaty.shoppinglist.presentation
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import androidx.lifecycle.ViewModelProvider
+import androidx.appcompat.app.AppCompatActivity
 import com.almaty.shoppinglist.R
 import com.almaty.shoppinglist.domain.ShopItem
-import com.google.android.material.textfield.TextInputLayout
-import java.lang.RuntimeException
 
-class ShopItemActivity : AppCompatActivity() {
-
+class ShopItemActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
 
     private var screenMode = MODE_UNKNOWN
     private var shopItemId = ShopItem.UNDEFINED_ID
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d("ShopItemActivityQWE", "onCreate")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shop_item)
         parseIntent()
@@ -36,10 +26,10 @@ class ShopItemActivity : AppCompatActivity() {
     private fun launchRightMode(){
         val fragment = when(screenMode){
             MODE_EDIT ->ShopItemFragment.newInstanceEditItem(shopItemId = shopItemId)
-
             MODE_ADD ->ShopItemFragment.newInstanceAddItem()
             else-> throw RuntimeException("Unknown screen mode is absent")
         }
+        supportFragmentManager.popBackStack()
         supportFragmentManager.beginTransaction()
             .replace(R.id.shop_item_container, fragment)
             .commit()
@@ -66,7 +56,6 @@ class ShopItemActivity : AppCompatActivity() {
 
     }
 
-
     companion object{
         private const val EXTRA_SCREEN_MODE = "extra_mode"
         private const val MODE_EDIT = "mode_edit"
@@ -86,5 +75,9 @@ class ShopItemActivity : AppCompatActivity() {
             intent.putExtra(EXTRA_SHOP_ITEM_ID, shopItemId)
             return intent
         }
+    }
+
+    override fun onEditingFinished() {
+        finish()
     }
 }
